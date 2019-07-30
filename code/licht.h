@@ -6,7 +6,7 @@
 /// @package : Licht
 /// LED-Lichtsteuerung für Arduino.
 ///
-/// @author Borys 28 Jul 2019
+/// @author Borys 30 28 Jul 2019
 /// @note licht.h
 ///
 
@@ -52,29 +52,44 @@ class Licht
  */
 class ALicht : public Licht
 {
-  private:
-  /** aktueller Zustand*/
-    enum Status {stAus, stHeller, stZwischen,stDunkler, stEin} Stat;
-int Wert;
-    unsigned long wechsel, Tan, Taus;
-  public:
-    ALicht(int pPin): Licht(pPin);
-  aus();
-     setzen(int pWert);
-     halb();
-    ein();
-    void check();
+private:
+	/** aktueller Zustand*/
+	enum Status { stAus, /**< ist ganz aus*/
+		stHeller, /**< wird heller*/
+		stZwischen, /**< steht zwischen an und aus*/
+		stDunkler, /**< wird dunkler*/
+		stEin /**< ist ganz an*/
+	} Stat;
+	/** aktueller analoger Wert*/
+	int Wert;
+	unsigned long wechsel, Tan, Taus;
+public:
+	ALicht(int pPin) : Licht(pPin);
+	aus();
+	setzen(int pWert);
+	halb();
+	ein();
+	void check();
 };
+/** Klassse für Blinklicht.
+ * Parameter: Dauer für an und aus
+ */
 class BLicht : Licht
 {
-  private:
-    enum Status {stAus, stBlink, stEin} Stat;
-    unsigned long wechsel, Tan, Taus;
-  public:
-    set(int pTan, int pTaus);
-    set(int pTan, int pTaus, int pW);
-    BLicht(int pPin, int pTan, int pTaus): Licht(pPin);
-    blinken(bool pAn);
-    check();
+private:
+	/** augenblicklicher Zustand */
+	enum Status {
+		stAus, /**< ist konstant aus*/
+		stBlink, /**< blinkt mit den eingestellten Parametern*/
+		stEin /** ist konstant an*/
+	} Stat;
+	/** Zeiten*/
+	unsigned long wechsel, Tan, Taus;
+public:
+	set(int pTan, int pTaus);
+	set(int pTan, int pTaus, int pW);
+	BLicht(int pPin, int pTan, int pTaus) : Licht(pPin);
+	blinken(bool pAn);
+	check();
 };
 #endif
