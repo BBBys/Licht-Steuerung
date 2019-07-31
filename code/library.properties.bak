@@ -1,0 +1,8 @@
+name=Licht
+version=1.0.0
+author=Borys
+maintainer=Borys
+sentence=LED-Licht Steuerung.
+paragraph=.
+category=Uncategorized
+architectures=*

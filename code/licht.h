@@ -62,14 +62,17 @@ private:
 	} Stat;
 	/** aktueller analoger Wert*/
 	int Wert;
-	unsigned long wechsel, Tan, Taus;
+	/** Grenzen für Änderung*/
+	int Von,Bis;
+	unsigned long jetzt, Start, Ende;
 public:
-	ALicht(int pPin) : Licht(pPin);
-	aus();
-	setzen(int pWert);
-	halb();
-	ein();
-	void check();
+	ALicht(int pPin) ;
+	void aus();
+	void setzen(int pWert);
+	void halb();
+	void ein();
+	bool check();
+	void heller(int von, int bis, long dauer);
 };
 /** Klassse für Blinklicht.
  * Parameter: Dauer für an und aus
@@ -86,10 +89,10 @@ private:
 	/** Zeiten*/
 	unsigned long wechsel, Tan, Taus;
 public:
-	set(int pTan, int pTaus);
-	set(int pTan, int pTaus, int pW);
-	BLicht(int pPin, int pTan, int pTaus) : Licht(pPin);
-	blinken(bool pAn);
-	check();
+	void set(int pTan, int pTaus);
+	void set(int pTan, int pTaus, int pW);
+	BLicht(int pPin, int pTan, int pTaus);
+	void blinken(bool pAn);
+	void check();
 };
 #endif

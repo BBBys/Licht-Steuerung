@@ -6,20 +6,8 @@
 /// @note licht.cpp
 ///
 #include "Licht.h"
-/** Basisklasse.
- * eine LED an einem Arduino-Pin
- *
- */
-class Licht
-{
-private:
-protected:
-public:
-	/** LED an Pin vereinbaren.
-	* Pin-Nummer wird gespeichert, als Ausgabe vereinbart und ausgeschaltet
-	* @param pPin die Nummer
-	*/
-	Licht(int pPin)
+
+Licht::Licht(int pPin)
 	{
 		Pin = pPin;
 		pinMode(Pin, OUTPUT);
@@ -27,13 +15,13 @@ public:
 		istAn = false;
 	}
 	/** LED ausschalten. */
-	aus()
+	Licht::aus()
 	{
 		digitalWrite(Pin, LOW);
 		istAn = false;
 	}
 	/** LED einschalten. */
-	ein()
+	Licht::ein()
 	{
 		digitalWrite(Pin, HIGH);
 		istAn = true;
@@ -41,7 +29,7 @@ public:
 	/** LED schalten.
 	 * @param p true für ein, false für aus
 	 */
-	setzen(bool p)
+	Licht::setzen(bool p)
 	{
 		if (p)ein();
 		else aus();
@@ -49,7 +37,7 @@ public:
 	/** blinkt 22 mal langsamer werdend, dann aus.
 	@note blocking für etwa 8 Sekunden
 	*/
-	weg()
+	Licht::weg()
 	{
 		int d;
 		for (d = 500; d > 50; d = d - 20)
@@ -64,7 +52,7 @@ public:
 	/** blinkt 22 mal schneller werdend, dann an.
 	@note blocking für etwa 8 Sekunden
 	*/
-	hin()
+	Licht::hin()
 	{
 		int d;
 		for (d = 50; d < 500; d = d + 20)
@@ -76,67 +64,12 @@ public:
 		}
 		ein();
 	}
-};
-/** Klasse für analog angesteuerte LED.
- * eine LED an einem Arduino-Pin, Helligkeit einstellbar
- *
- *
- */
-class ALicht : public Licht
-{
-private:
-public:
-	ALicht(int pPin) : Licht(pPin)
-	{
-		Stat = stAus;
-		Wert = 0;
-		analogWrite(Pin, Wert);
-	}
-	aus()
-	{
-		Stat = stAus;
-		check();
-		istAn = false;
-	}
-	setzen(int pWert)
-	{
-		Stat = stZwischen;
-		Wert = pWert;
-		check();
-	}
-	halb()
-	{
-		setzen(99);
-	}
-	ein()
-	{
-		Stat = stEin;
-		check();
-		istAn = true;
-	}
-	void check()
-	{
-		switch (Stat)
-		{
-		case stAus:
-			Wert = 0;
-			break;
-		case stEin:
-			Wert = 255;
-			break;
-		}
-		analogWrite(Pin, Wert);
-	}
-};
-class BLicht : Licht
-{
-private:
-public:
-	set(int pTan, int pTaus)
+
+void BLicht::set(int pTan, int pTaus)
 	{
 		set(pTan, pTaus, 0);
 	}
-	set(int pTan, int pTaus, int pW)
+	void BLicht::set(int pTan, int pTaus, int pW)
 	{
 		Tan = pTan;
 		Taus = pTaus;
@@ -150,14 +83,14 @@ public:
 * @param pTan Dauer an
 * @param pTaus Dauer aus
 */
-	BLicht(int pPin, int pTan, int pTaus) : Licht(pPin)
+	BLicht::BLicht(int pPin, int pTan, int pTaus) : Licht(pPin)
 	{
 		Tan = pTan;
 		Taus = pTaus;
 		wechsel = 0;
 		Stat = stAus;
 	}
-	blinken(bool pAn)
+	void BLicht::blinken(bool pAn)
 	{
 		if (pAn)Stat = stBlink;
 		else
@@ -166,7 +99,7 @@ public:
 			digitalWrite(Pin, LOW);
 		}
 	}
-	check()
+	void BLicht::check()
 	{
 		if (Stat = stBlink)
 		{
@@ -180,4 +113,3 @@ public:
 			}
 		}
 	}
-}
