@@ -78,11 +78,11 @@ void BLicht::set(int pTan, int pTaus)
 		digitalWrite(Pin, istAn);
 	}
 	/** LED an Pin und Blinkzeiten vereinbaren.
-* Pin-Nummer wird gespeichert, als Ausgabe vereinbart und ausgeschaltet
-* @param pPin die Nummer
-* @param pTan Dauer an
-* @param pTaus Dauer aus
-*/
+	* Pin-Nummer wird gespeichert, als Ausgabe vereinbart und ausgeschaltet
+	* @param pPin die Nummer
+	* @param pTan Dauer an
+	* @param pTaus Dauer aus
+	*/
 	BLicht::BLicht(int pPin, int pTan, int pTaus) : Licht(pPin)
 	{
 		Tan = pTan;
@@ -113,3 +113,94 @@ void BLicht::set(int pTan, int pTaus)
 			}
 		}
 	}
+	/** LED an Pin vereinbaren.
+	* Pin-Nummer wird gespeichert, als Ausgabe vereinbart und ausgeschaltet
+	* @param pPin die Nummer
+	*/
+	LLicht::LLicht(int pPin) : Licht(pPin)
+	{
+		Wechsel = 0;
+		Stat = stAus;
+	}
+	void LLicht::aus()
+	{
+		Stat = stAus;
+		Licht::aus();
+	}
+	void LLicht::ein()
+	{
+		Licht::ein();
+		Ein1 = random(EIN10, EIN11);
+		Ein3 = random(EIN30, EIN31);
+		Ein5 = random(EIN30, EIN31);
+		Aus2 = random(AUS20, AUS21);
+		Aus4 = random(AUS40, AUS41);
+		Aus6 = random(AUS40, AUS41);
+		Stat = stZ1;
+		Wechsel = millis() + Ein1;
+		check();
+	}
+	void LLicht::check()
+	{
+		unsigned long jetzt;
+		jetzt = millis();
+		switch (Stat)
+		{
+		//case LLicht::stAus:
+		//	Licht::aus();
+		//	break;
+		case LLicht::stZ1:
+			if (jetzt > Wechsel)
+			{
+				Licht::aus();
+				Stat = stZ2;
+				Wechsel = jetzt + Aus2;
+			}
+			break;
+		case LLicht::stZ2:
+			if (jetzt > Wechsel)
+			{
+				Licht::ein();
+				Stat = stZ3;
+				Wechsel = jetzt + Ein3;
+			}
+			break;
+		case LLicht::stZ3:
+			if (jetzt > Wechsel)
+			{
+				Licht::aus();
+				Stat = stZ4;
+				Wechsel = jetzt + Aus4;
+			}
+			break;
+		case LLicht::stZ4:
+			if (jetzt > Wechsel)
+			{
+				Licht::ein();
+				Stat = stZ5;
+				Wechsel = jetzt + Ein5;
+			}
+			break;
+		case LLicht::stZ5:
+			if (jetzt > Wechsel)
+			{
+				Licht::aus();
+				Stat = stZ6;
+				Wechsel = jetzt + Aus6;
+			}
+			break;
+		case LLicht::stZ6:
+			if (jetzt > Wechsel)
+			{
+				Licht::ein();
+				Stat = stEin;
+			}
+			break;
+			//case LLicht::stEin:
+		//	Licht::ein();
+		//	break;
+		default:
+			break;
+		}
+	}
+		
